@@ -18,7 +18,7 @@ To launch the project, follow these steps:
 2. Clone or download this repository.
 3. Navigate to the project directory in your terminal.
 4. Install dependencies using `pip install -r requirements.txt`.
-5. Run the project using `python src/main.py`.
+5. Run the project using `python3 src/main.py`.
 
 ## Update
 
