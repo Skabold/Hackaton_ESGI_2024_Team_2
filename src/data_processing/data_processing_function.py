@@ -5,8 +5,11 @@ This module contains the main functions and logic for processing input data.
 
 import numpy as np
 import os
+from dotenv import load_dotenv
 import csv
-import datetime
+from datetime import datetime
+
+load_dotenv()
 
 
 def calculate_delay_rate(interval, delayed_date, current_date):
@@ -21,7 +24,8 @@ def calculate_delay_rate(interval, delayed_date, current_date):
     Returns:
         float: The delay rate
     """
-
+    delayed_date = float(delayed_date)
+    current_date = float(current_date)
     if (current_date - delayed_date) >= interval:
         print(current_date - delayed_date)
         raise RuntimeError("Exception occurred : Wrong refined data")
@@ -34,6 +38,7 @@ def calculate_delay_rate(interval, delayed_date, current_date):
 def train_delay_rate(pathtofile):
     """
     Function to calculate the delay rate for trains based on a CSV file.
+    Returns an array with trainId and the corresponding average delay for that train.
     """
     # Load interval from environment variable
     interval = float(os.getenv("INTERVAL"))
@@ -41,12 +46,8 @@ def train_delay_rate(pathtofile):
     # Get current date and time
     current_date = datetime.now().timestamp()
 
-    # Initialize variables
-    delay_sum = 0
-    num_trips = 0
-
-    # Dictionary to store delay rates for each train
-    delay_rates = {}
+    # Dictionary to store delay sum and number of trips for each train
+    train_delays = {}
 
     # Read CSV file
     with open(pathtofile, "r") as csvfile:
@@ -56,20 +57,15 @@ def train_delay_rate(pathtofile):
             # Calculate delay rate for this row
             delay_rate = calculate_delay_rate(interval, delayed_date, current_date)
             # Add delay rate to dictionary
-            if train_id in delay_rates:
-                delay_rates[train_id].append(delay_rate)
+            if train_id in train_delays:
+                train_delays[train_id].append(delay_rate)
             else:
-                delay_rates[train_id] = [delay_rate]
+                train_delays[train_id] = [delay_rate]
 
-    # Calculate total delay sum and number of trips
-    for train_id, rates in delay_rates.items():
-        delay_sum += np.sum(rates)
-        num_trips += len(rates)
+    # Calculate average delay for each train
+    average_delays = []
+    for train_id, rates in train_delays.items():
+        average_delay = np.mean(rates) if rates else 0
+        average_delays.append((train_id, average_delay))
 
-    # Calculate average delay rate
-    if num_trips > 0:
-        average_delay_rate = delay_sum / num_trips
-    else:
-        average_delay_rate = 0
-
-    return average_delay_rate
+    return average_delays
