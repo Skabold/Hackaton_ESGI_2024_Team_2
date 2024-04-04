@@ -7,7 +7,7 @@ This project is developed by the Team 2 of "ESGI Hackathon 2024" for SNCF. The a
 ## Folder Structure
 
 - **data/input**: Contains input data for the project.
-- **data/output**: Placeholder for any processed or output data.
+- **data/output**: Contains output data for the project.
 - **src**: Contains the source code for the project.
   
 ## How to Run
