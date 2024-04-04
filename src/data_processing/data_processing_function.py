@@ -30,7 +30,7 @@ def calculate_delay_rate(interval, delayed_date, current_date):
         print(current_date - delayed_date)
         raise RuntimeError("Exception occurred : Wrong refined data")
 
-    delay_rate = 1 - ((delayed_date - current_date) / interval)
+    delay_rate = 1 - ((current_date - delayed_date) / interval)
 
     return delay_rate
 
