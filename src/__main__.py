@@ -16,7 +16,7 @@ def main():
         import_train_trajet()
     else:
         # Call the function
-        delay_rate = train_delay_rate("data/input/raw.csv")
+        delay_rate = train_delay_rate("data/input/refined/data_filtre.csv")
 
         # Print the result or do whatever you want with it
         print("Average delay rate:", delay_rate)

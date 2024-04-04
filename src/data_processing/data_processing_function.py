@@ -52,6 +52,7 @@ def train_delay_rate(pathtofile):
     # Read CSV file
     with open(pathtofile, "r") as csvfile:
         csvreader = csv.reader(csvfile, delimiter=";")
+        next(csvreader)
         for row in csvreader:
             train_id, delayed_date = row
             # Calculate delay rate for this row
