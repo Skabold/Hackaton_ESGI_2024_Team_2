@@ -10,7 +10,7 @@ from data_processing.data_processing_function import calculate_delay_rate
 
 def main():
     # Sample data for testing
-    interval = 365
+    interval = 30 * 3600 * 24
     delayed_date = 1712217600
     current_date = 1712244726
     num_trips = 5

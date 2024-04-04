@@ -18,9 +18,15 @@ def calculate_delay_rate(interval, delayed_date, current_date, num_trips):
 
     Returns:
         float: The delay rate?
+
+    Testing with sample data:
+        # Sample data for testing
+        interval = 30 * 3600 * 24
+        delayed_date = 1712217600
+        current_date = 1712244726
+        num_trips = 5
     """
 
-    ##TO FIX
     if (current_date - delayed_date) >= interval:
         print(current_date - delayed_date)
         raise RuntimeError("Exception occurred : Wrong refined data")
