@@ -10,6 +10,7 @@ import sys
 from data_processing.data_processing_function import calculate_delay_rate
 from data_import.data_import_function import import_train_trajet
 
+
 def main():
     # Vérification des arguments de la ligne de commande
     if len(sys.argv) == 2 and sys.argv[1] == "import":
