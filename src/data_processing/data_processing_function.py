@@ -27,7 +27,6 @@ def calculate_delay_rate(interval, delayed_date, current_date):
     delayed_date = float(delayed_date)
     current_date = float(current_date)
     if (current_date - delayed_date) >= interval:
-        print(current_date - delayed_date)
         raise RuntimeError("Exception occurred : Wrong refined data")
 
     delay_rate = 1 - ((current_date - delayed_date) / interval)
@@ -44,7 +43,7 @@ def train_delay_rate(pathtofile):
     interval = float(os.getenv("INTERVAL"))
 
     # Get current date and time
-    current_date = datetime.now().timestamp()
+    current_date = float(os.getenv("DATE_REF"))
 
     # Dictionary to store delay sum and number of trips for each train
     train_delays = {}

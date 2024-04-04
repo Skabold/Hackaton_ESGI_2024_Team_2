@@ -6,9 +6,13 @@ This module contains the main functions and logic for import of data.
 import pandas as pd
 from datetime import datetime, timedelta
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def import_train_trajet():
+    interval = float(os.getenv("INTERVAL"))
     # Chemin du fichier Excel
     chemin_fichier_data = os.getcwd() + "/data/input/tx_retard.xlsx"
 
@@ -28,7 +32,8 @@ def import_train_trajet():
         date_et_heure_theorique = date_excel + timedelta(
             hours=heure_debut.hour, minutes=heure_debut.minute
         )
-        date_actuelle = datetime.now()
+        date_actuelle_str = os.getenv("DATE_REF")
+        date_actuelle = datetime.fromtimestamp(float(date_actuelle_str))
 
         # Calcul des timestamps
         timestamp_theorique = date_et_heure_theorique.timestamp()
@@ -36,7 +41,7 @@ def import_train_trajet():
 
         # Filtrage des lignes en fonction des timestamps
         diff_date = timestamp_actuelle - timestamp_theorique
-        if diff_date < 365 * 2 * 3600 * 24:
+        if diff_date < interval:
             id_objet = row[
                 1
             ]  # Supposant que la colonne de l'id de l'objet est la deuxième colonne
