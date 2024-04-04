@@ -11,7 +11,7 @@ def calculate_delay_rate(interval, delayed_date, current_date, num_trips):
     Calculate the delay rate based on input parameters.
 
     Args:
-        interval (int or float): The time interval in days.
+        interval (int or float): The time interval in seconds.
         delayed_date (int or float): Date of the delay (timestamp).
         current_date (int or float): Current date (timestamp).
         num_trips (int): Number of trips.
