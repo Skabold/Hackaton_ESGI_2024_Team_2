@@ -79,3 +79,39 @@ def one_train_delay_indicator(average_delays, idtrain):
         if train_id == idtrain:
             return delay
     return None
+
+
+def satisfaction_returns(pathtofile) :
+    """
+    Function to calculate the satisfaction rate for trains based on a CSV file.
+    """
+    # Load interval from environment variable
+    interval = float(os.getenv("INTERVAL"))
+
+    # Get current date and time
+    current_date = float(os.getenv("DATE_REF"))
+
+    train_satisfaction = {}
+
+    with open(pathtofile, "r") as csvfile:
+        csvreader = csv.reader(csvfile, delimiter=";")
+        next(csvreader)
+        for row in csvreader:
+            train_id, date_satisfaction, satisfaction = row
+            if train_id not in train_satisfaction:
+                train_satisfaction[train_id] = [0, 0]
+
+            # Calculate delay rate for this row
+            train_satisfaction[train_id][0] += (int(satisfaction) * (1 - ((current_date - float(date_satisfaction))/interval)))
+            train_satisfaction[train_id][1] += 1
+
+    satisfactions = []
+
+    for keys in train_satisfaction:
+        train_satisfaction[keys][0] = train_satisfaction[keys][0]/(train_satisfaction[keys][1]*3)
+        satisfactions.append(train_satisfaction[keys][0])
+
+    np.mean(satisfactions)
+    
+        
+    return np.mean(satisfactions)
