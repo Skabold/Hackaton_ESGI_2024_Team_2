@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def plot_tx_retard(data_list):
+def plot_tx_retard(data_list,graph_name):
     # Filtrer les valeurs en fonction de la condition y > 0 et < 1 pour rendre la lecture plus digeste
     filtered_list = [y for _, y in data_list if 0 < y < 100]
 
@@ -30,9 +30,9 @@ def plot_tx_retard(data_list):
     plt.bar(labels[start_index:end_index], cumul_values[start_index:end_index], color='skyblue')
 
     # Titres et étiquettes
-    plt.title(f'Histogramme des valeurs cumulées ({min_val} < y < {max_val})')
-    plt.xlabel('Intervalles de valeurs')
-    plt.ylabel('Nombre de valeurs')
+    plt.title(f'Histogramme des {graph_name} cumulées ({min_val} < y < {max_val})')
+    plt.xlabel(f'Intervalles des {graph_name}')
+    plt.ylabel(f'Nombre de {graph_name}')
 
     # Afficher le graphique
     plt.xticks(rotation=45, ha='right')

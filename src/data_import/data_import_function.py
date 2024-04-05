@@ -7,9 +7,48 @@ import pandas as pd
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+import csv
 
 load_dotenv()
 
+def import_train_satisfaction():
+    interval = float(os.getenv("INTERVAL"))
+    chemin_fichier_entree =  os.getcwd() + "/data/input/satisfaction.csv"
+    chemin_fichier_sortie =os.getcwd() + "/data/input/refined/satisfaction.csv"
+
+    # Ouvrir le fichier CSV en mode lecture
+    with open(chemin_fichier_entree, newline='') as fichier_entree:
+        lecteur_csv = csv.reader(fichier_entree)
+        
+        # Ignorer la première ligne (entête)
+        next(lecteur_csv)
+        
+        # Récupérer et traiter les données
+        donnees_sortie = []
+        for ligne in lecteur_csv:
+            
+            premiere_colonne = ligne[0]
+            deuxieme_colonne_timestamp = datetime.strptime(ligne[1], '%d/%m/%Y').timestamp()
+            quatrieme_colonne = ligne[3]
+
+            date_actuelle_str = os.getenv("DATE_REF")
+            date_actuelle = datetime.fromtimestamp(float(date_actuelle_str))
+
+            # Calcul des timestamps
+            timestamp_theorique = deuxieme_colonne_timestamp
+            timestamp_actuelle = date_actuelle.timestamp()
+
+            diff_date = timestamp_theorique - timestamp_actuelle
+            print(f"diff {diff_date} tp_a {timestamp_actuelle} tp_theo {timestamp_theorique}")
+            if diff_date < interval:
+                donnees_sortie.append([premiere_colonne, deuxieme_colonne_timestamp, quatrieme_colonne])
+
+    # Écrire les données dans un nouveau fichier CSV avec un délimiteur ";"
+    with open(chemin_fichier_sortie, mode='w', newline='') as fichier_sortie:
+        writer = csv.writer(fichier_sortie, delimiter=';')
+        writer.writerows(donnees_sortie)
+    print("Fichier satisfaction CSV exporté avec succès.")
+    
 
 def import_train_trajet():
     interval = float(os.getenv("INTERVAL"))
@@ -54,4 +93,18 @@ def import_train_trajet():
     chemin_export_csv = os.getcwd() + "/data/input/refined/data_filtre.csv"
     df_filtre.to_csv(chemin_export_csv, index=False, sep=";")
 
-    print("Fichier CSV exporté avec succès.")
+    print("Fichier taux de retard CSV exporté avec succès.")
+
+
+def get_train_list():
+    chemin_fichier_data = os.getcwd() + "/data/input/refined/data_filtre.csv"
+
+    train_list = []
+    df = pd.read_csv(chemin_fichier_data, header=None, sep=';')  # Ignore l'en-tête
+
+    for index, row in df.iloc[1:].iterrows():  # Ignorer la première ligne (l'en-tête)
+        id_objet = row[0]
+        if id_objet not in train_list:
+            train_list.append(id_objet)
+
+    return train_list
