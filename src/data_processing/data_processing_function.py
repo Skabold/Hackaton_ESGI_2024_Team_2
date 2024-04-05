@@ -95,7 +95,7 @@ def one_train_delay_indicator(average_delays, idtrain):
     return None
 
 
-def satisfaction_returns(pathtofile) :
+def satisfaction_returns(pathtofile):
     """
     Function to calculate the satisfaction rate for trains based on a CSV file.
     """
@@ -116,38 +116,46 @@ def satisfaction_returns(pathtofile) :
                 train_satisfaction[train_id] = [0, 0]
 
             # Calculate delay rate for this row
-            train_satisfaction[train_id][0] += (int(satisfaction) * (1 - ((current_date - float(date_satisfaction))/interval)))
+            train_satisfaction[train_id][0] += int(satisfaction) * (
+                1 - ((current_date - float(date_satisfaction)) / interval)
+            )
             train_satisfaction[train_id][1] += 1
 
     satisfactions = []
 
     for keys in train_satisfaction:
-        train_satisfaction[keys][0] = train_satisfaction[keys][0]/(train_satisfaction[keys][1]*3)
+        train_satisfaction[keys][0] = train_satisfaction[keys][0] / (
+            train_satisfaction[keys][1] * 3
+        )
         satisfactions.append(train_satisfaction[keys][0])
 
     np.mean(satisfactions)
-    
-        
-    return np.mean(satisfactions)
 
-def calculate_train_sum(idTrain_list, delay_rate):
-    idTrain_list.sort()
-    for idTrain in idTrain_list:
-        tx_r_weight = float(os.getenv("TX_R_WEIGHT"))
-        tx_q_weight = float(os.getenv("TX_Q_WEIGHT"))
-        tx_s_weight = float(os.getenv("TX_S_WEIGHT"))
+    return train_satisfaction
 
-        tx_retard = one_train_delay_indicator(delay_rate, idTrain)
-        tx_q = 1
+
+def get_satisaction(data, id_str):
+    if id_str in data:
+        return data[id_str][0]
+    else:
+        return None
+
+
+def calculate_train_sum(idTrain, delay_rate, satisfaction_rate):
+    tx_r_weight = float(os.getenv("TX_R_WEIGHT"))
+    tx_q_weight = float(os.getenv("TX_Q_WEIGHT"))
+    tx_s_weight = float(os.getenv("TX_S_WEIGHT"))
+
+    tx_retard = delay_rate
+    tx_q = np.random.random()
+    tx_s = satisfaction_rate
+
+    if tx_s == 0:
         tx_s = 1
 
-        if tx_s == 0:
-            tx_s = 1
+    score = (tx_r_weight * tx_retard) + (tx_q_weight * tx_q)
+    score = score / ((tx_r_weight + tx_q_weight) * (tx_s * tx_s_weight))
 
-        score = (tx_r_weight * tx_retard) + (tx_q_weight * tx_q)
-        score = score / ((tx_r_weight + tx_q_weight) * (tx_s * tx_s_weight))
-
-        print(f"ID Train : {idTrain} \t\t\t SCORE  : {score}")
+    print(f"ID Train : {idTrain} \t\t\t SCORE  : {score}")
 
     print("Computing DONE")
-
