@@ -12,6 +12,7 @@ import csv
 load_dotenv()
 
 def import_train_satisfaction():
+    interval = float(os.getenv("INTERVAL"))
     chemin_fichier_entree =  os.getcwd() + "/data/input/satisfaction.csv"
     chemin_fichier_sortie =os.getcwd() + "/data/input/refined/satisfaction.csv"
 
@@ -25,10 +26,21 @@ def import_train_satisfaction():
         # Récupérer et traiter les données
         donnees_sortie = []
         for ligne in lecteur_csv:
+            
             premiere_colonne = ligne[0]
             deuxieme_colonne_timestamp = datetime.strptime(ligne[1], '%d/%m/%Y').timestamp()
             quatrieme_colonne = ligne[3]
-            donnees_sortie.append([premiere_colonne, deuxieme_colonne_timestamp, quatrieme_colonne])
+
+            date_actuelle_str = os.getenv("DATE_REF")
+            date_actuelle = datetime.fromtimestamp(float(date_actuelle_str))
+
+            # Calcul des timestamps
+            timestamp_theorique = deuxieme_colonne_timestamp
+            timestamp_actuelle = date_actuelle.timestamp()
+
+            diff_date = timestamp_actuelle - timestamp_theorique
+            if diff_date < interval:
+                donnees_sortie.append([premiere_colonne, deuxieme_colonne_timestamp, quatrieme_colonne])
 
     # Écrire les données dans un nouveau fichier CSV avec un délimiteur ";"
     with open(chemin_fichier_sortie, mode='w', newline='') as fichier_sortie:
