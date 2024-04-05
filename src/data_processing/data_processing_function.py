@@ -79,3 +79,26 @@ def one_train_delay_indicator(average_delays, idtrain):
         if train_id == idtrain:
             return delay
     return None
+
+
+
+def calculate_train_sum(idTrain_list,delay_rate):
+    for idTrain in idTrain_list:
+        tx_r_weight = float(os.getenv("TX_R_WEIGHT"))
+        tx_q_weight = float(os.getenv("TX_Q_WEIGHT"))
+        tx_s_weight = float(os.getenv("TX_S_WEIGHT"))
+
+        tx_retard = one_train_delay_indicator(delay_rate, idTrain)
+        tx_q      = 1
+        tx_s      = 1
+
+        if tx_s == 0 :
+            tx_s = 1
+        
+        score = (tx_r_weight * tx_retard) + (tx_q_weight * tx_q)
+        score = score / ((tx_r_weight + tx_q_weight) * tx_s)
+
+        print(f"ID Train : {idTrain} \t\t\t SCORE  : {score}")
+
+
+    print ("Computing DONE")

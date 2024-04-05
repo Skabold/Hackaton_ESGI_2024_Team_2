@@ -81,3 +81,17 @@ def import_train_trajet():
     df_filtre.to_csv(chemin_export_csv, index=False, sep=";")
 
     print("Fichier taux de retard CSV exporté avec succès.")
+
+
+def get_train_list():
+    chemin_fichier_data = os.getcwd() + "/data/input/refined/data_filtre.csv"
+
+    train_list = []
+    df = pd.read_csv(chemin_fichier_data, header=None, sep=';')  # Ignore l'en-tête
+
+    for index, row in df.iloc[1:].iterrows():  # Ignorer la première ligne (l'en-tête)
+        id_objet = row[0]
+        if id_objet not in train_list:
+            train_list.append(id_objet)
+
+    return train_list

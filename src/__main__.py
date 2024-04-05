@@ -6,9 +6,9 @@ It reads input data, performs data processing, and potentially outputs results.
 """
 
 import sys
-from data_import.data_import_function import import_train_trajet , import_train_satisfaction
+from data_import.data_import_function import get_train_list, import_train_trajet , import_train_satisfaction
 from data_processing.data_processing_function import (
-    one_train_delay_indicator,
+    calculate_train_sum,
     train_delay_rate,
 )
 
@@ -25,16 +25,14 @@ def main():
         delay_rate = train_delay_rate("data/input/refined/data_filtre.csv")
 
         # Print the result or do whatever you want with it
-        print("Average delay rate:", delay_rate)
+        # print("Average delay rate:", delay_rate)
 
         # graph, uncomment if you need it$
         # plot_tx_retard(delay_rate,"taux de retards")
 
+        list_train= get_train_list()
 
-        # check for a single train
-        print()
-        print(one_train_delay_indicator(delay_rate, "859660"))
-
+        calculate_train_sum(list_train,delay_rate)
 
 if __name__ == "__main__":
     main()
