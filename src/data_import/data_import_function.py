@@ -38,7 +38,8 @@ def import_train_satisfaction():
             timestamp_theorique = deuxieme_colonne_timestamp
             timestamp_actuelle = date_actuelle.timestamp()
 
-            diff_date = timestamp_actuelle - timestamp_theorique
+            diff_date = timestamp_theorique - timestamp_actuelle
+            print(f"diff {diff_date} tp_a {timestamp_actuelle} tp_theo {timestamp_theorique}")
             if diff_date < interval:
                 donnees_sortie.append([premiere_colonne, deuxieme_colonne_timestamp, quatrieme_colonne])
 
