@@ -69,3 +69,13 @@ def train_delay_rate(pathtofile):
         average_delays.append((train_id, average_delay))
 
     return average_delays
+
+
+def one_train_delay_indicator(average_delays, idtrain):
+    """
+    Function to retrieve the delay indicator for a specific train.
+    """
+    for train_id, delay in average_delays:
+        if train_id == idtrain:
+            return delay
+    return None
