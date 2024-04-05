@@ -71,6 +71,20 @@ def train_delay_rate(pathtofile):
     return average_delays
 
 
+def export_train_delay(dr, pathtossave):
+    # Specify the output CSV file path
+    output_file = pathtossave
+
+    # Write delay rates to CSV
+    with open(output_file, "w", newline="") as csvfile:
+        csvwriter = csv.writer(csvfile)
+        # Write header
+        csvwriter.writerow(["Train ID", "Average Delay"])
+        # Write data rows
+        for train_id, average_delay in dr:
+            csvwriter.writerow([train_id, average_delay])
+
+
 def one_train_delay_indicator(average_delays, idtrain):
     """
     Function to retrieve the delay indicator for a specific train.
@@ -81,8 +95,7 @@ def one_train_delay_indicator(average_delays, idtrain):
     return None
 
 
-
-def calculate_train_sum(idTrain_list,delay_rate):
+def calculate_train_sum(idTrain_list, delay_rate):
     idTrain_list.sort()
     for idTrain in idTrain_list:
         tx_r_weight = float(os.getenv("TX_R_WEIGHT"))
@@ -90,16 +103,15 @@ def calculate_train_sum(idTrain_list,delay_rate):
         tx_s_weight = float(os.getenv("TX_S_WEIGHT"))
 
         tx_retard = one_train_delay_indicator(delay_rate, idTrain)
-        tx_q      = 1
-        tx_s      = 1
+        tx_q = 1
+        tx_s = 1
 
-        if tx_s == 0 :
+        if tx_s == 0:
             tx_s = 1
-        
+
         score = (tx_r_weight * tx_retard) + (tx_q_weight * tx_q)
         score = score / ((tx_r_weight + tx_q_weight) * (tx_s * tx_s_weight))
 
         print(f"ID Train : {idTrain} \t\t\t SCORE  : {score}")
 
-
-    print ("Computing DONE")
+    print("Computing DONE")
