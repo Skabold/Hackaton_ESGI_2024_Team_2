@@ -96,7 +96,7 @@ def calculate_train_sum(idTrain_list,delay_rate):
             tx_s = 1
         
         score = (tx_r_weight * tx_retard) + (tx_q_weight * tx_q)
-        score = score / ((tx_r_weight + tx_q_weight) * tx_s)
+        score = score / ((tx_r_weight + tx_q_weight) * (tx_s * tx_s_weight))
 
         print(f"ID Train : {idTrain} \t\t\t SCORE  : {score}")
 
