@@ -7,9 +7,35 @@ import pandas as pd
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+import csv
 
 load_dotenv()
 
+def import_train_satisfaction():
+    chemin_fichier_entree =  os.getcwd() + "/data/input/satisfaction.csv"
+    chemin_fichier_sortie =os.getcwd() + "/data/input/refined/satisfaction.csv"
+
+    # Ouvrir le fichier CSV en mode lecture
+    with open(chemin_fichier_entree, newline='') as fichier_entree:
+        lecteur_csv = csv.reader(fichier_entree)
+        
+        # Ignorer la première ligne (entête)
+        next(lecteur_csv)
+        
+        # Récupérer et traiter les données
+        donnees_sortie = []
+        for ligne in lecteur_csv:
+            premiere_colonne = ligne[0]
+            deuxieme_colonne_timestamp = datetime.strptime(ligne[1], '%d/%m/%Y').timestamp()
+            quatrieme_colonne = ligne[3]
+            donnees_sortie.append([premiere_colonne, deuxieme_colonne_timestamp, quatrieme_colonne])
+
+    # Écrire les données dans un nouveau fichier CSV avec un délimiteur ";"
+    with open(chemin_fichier_sortie, mode='w', newline='') as fichier_sortie:
+        writer = csv.writer(fichier_sortie, delimiter=';')
+        writer.writerows(donnees_sortie)
+    print("Fichier satisfaction CSV exporté avec succès.")
+    
 
 def import_train_trajet():
     interval = float(os.getenv("INTERVAL"))
@@ -54,4 +80,4 @@ def import_train_trajet():
     chemin_export_csv = os.getcwd() + "/data/input/refined/data_filtre.csv"
     df_filtre.to_csv(chemin_export_csv, index=False, sep=";")
 
-    print("Fichier CSV exporté avec succès.")
+    print("Fichier taux de retard CSV exporté avec succès.")
